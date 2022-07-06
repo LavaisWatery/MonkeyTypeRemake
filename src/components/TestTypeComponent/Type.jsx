@@ -1,29 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Type.module.scss";
 
 const Type = () => {
-    const [typeObject, setTypeObject] = useState(createTypeObject("When you're out and about on the Internet, you sometimes see the same thing in multiple places. There's the funny picture of that angry baby again, or the inspirational quote set against the shot of a rocky peak emerging from the clouds, or that plain-text indignant screed about that thing that apparently made several of your Facebook friends identically indignant. That stuff--all that stuff that's been copied over and over--that stuff has a special name: copypasta."));
-    
+    const [typeObject, setTypeObject] = useState(createTypeObject("When you're out and about on the Internet, you sometimes see the same thing in multiple places."));
+    const [startTime, setStartTime] = useState(null);
+    const [timer, setTimer] = useState(null);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if(startTime == null) return;
+            setTimer(new Date());
+        }, 10);
+
+        return () => clearTimeout(timer);
+    });
+
     function createTypeObject(typeString) {
-        return { type: typeString, currentTyped: "" }
+        return { type: typeString, currentTyped: "", combo: 0 }
     }
 
     function keyDown(e) {
-        console.log(e.keyCode)
-        if ((e.keyCode >= 48 && e.keyCode <= 57 || e.keyCode >= 65 && e.keyCode <= 90) || (e.key==' ' || e.key=="'" || e.key=="," || e.key=="." || e.key=="-" || e.key==":" || e.key==";")) { // They typed a key, number, space
-            console.log(e.key);
+        if ((e.keyCode >= 48 && e.keyCode <= 57 || 
+            e.keyCode >= 65 && e.keyCode <= 90) || 
+            (e.key==' ' || e.key=="'" || e.key=="," || e.key=="." || e.key=="-" || e.key==":" || e.key==";")) { // They typed a key, number, space
+            if(startTime == null) setStartTime(new Date()); // start timer
             e.preventDefault();
-            setTypeObject({ type: typeObject.type, currentTyped: typeObject.currentTyped += e.key });
+            var nextChar = typeObject.type[typeObject.currentTyped.length];
+            var wombo = typeObject.combo;
+
+            if(nextChar == e.key) wombo++;
+            else wombo = 0;
+
+            setTypeObject({ type: typeObject.type, currentTyped: typeObject.currentTyped += e.key, combo: wombo});
         }
         else if(e.key == "Backspace") {
-            console.log(e.key);
             e.preventDefault();
-            setTypeObject({ type: typeObject.type, currentTyped: typeObject.currentTyped.slice(0, -1)})
+            setTypeObject({ type: typeObject.type, currentTyped: typeObject.currentTyped.slice(0, -1), combo: 0})
         }
-    }
-    
-    function getCurrentIndex() {
-        return typeObject.currentTyped.length;
     }
     
     function layitout() {
@@ -49,6 +62,10 @@ const Type = () => {
 
     return (
         <div className={styles.type}>
+            <div className={styles.combo}>
+                <div>Combo: {typeObject.combo}</div>
+                <div>{timer != null && Math.floor((timer.getTime() - startTime.getTime()) / 1000)}</div>
+            </div>
             {layitout()}
         </div>
     );

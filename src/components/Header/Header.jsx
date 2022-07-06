@@ -4,7 +4,6 @@ const Header = () => {
     return (
         <header className={styles.root}>
             <div>MonkeyType Remake</div>
-            <></>
         </header>
     )
 }
