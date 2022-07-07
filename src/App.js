@@ -1,13 +1,22 @@
+import { useState } from "react";
+import { createGameObject } from "./lib/GameLib"
 import styles from "./App.module.scss";
+
 import Header from "./components/Header/Header";
-import Type from "./components/TestTypeComponent/Type";
+import TypeGame from "./components/TypeGame/TypeGame";
 
 function App() {
+  const [gameObject, setGameObject] = useState(createGameObject("When you're out and about on the Internet, you sometimes see the same thing in multiple places."));
+  const stateDeclerations = {
+    gameObject: gameObject,
+    setGameObject: setGameObject
+  }
+
   return (
     <div className={styles.root}>
       <Header/>
 
-      <Type/>
+      <TypeGame stateObject={stateDeclerations}/>
     </div>
   );
 }
