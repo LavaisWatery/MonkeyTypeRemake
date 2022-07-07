@@ -1,3 +1,4 @@
+export const GAME_TIMER = 30;
 // Creates fresh game object from typeString (what we want to type, this will eventually be auto generated)
 export function createGameObject(typeString) {
     return { type: typeString, currentTyped: "", combo: 0 }
@@ -9,11 +10,12 @@ export function toNewGameObject(gameObject) {
 
 // Handles keyboard presses
 export function gameKeyDown(e, stateObjects) {
+    console.log(stateObjects.gameObject);
     if ((e.keyCode >= 48 && e.keyCode <= 57 || 
         e.keyCode >= 65 && e.keyCode <= 90) || 
         (e.key==' ' || e.key=="'" || e.key=="," || e.key=="." || e.key=="-" || e.key==":" || e.key==";")) { // They typed a key, number, space
         var gameObject = { ...stateObjects.gameObject };
-        if(gameObject.startTime == null) gameObject.startTime = new Date(); // start timer
+        if(gameObject.endTime == null) gameObject.endTime = new Date(new Date().getTime() + (1000 * GAME_TIMER)); // start timer
         
         e.preventDefault();
         var nextChar = gameObject.type[gameObject.currentTyped.length];
@@ -29,8 +31,9 @@ export function gameKeyDown(e, stateObjects) {
     }
     else if(e.key == "Backspace") {
         e.preventDefault();
-        var gameObject = { ...stateObjects.gameObject }
-        stateObjects.setGameObject({ type: stateObjects.gameObject.type, currentTyped: stateObjects.gameObject.currentTyped.slice(0, -1), combo: 0})
+        gameObject = { ...stateObjects.gameObject, currentTyped: stateObjects.gameObject.currentTyped.slice(0, -1) }
+
+        stateObjects.setGameObject(gameObject)
     }
 }
 

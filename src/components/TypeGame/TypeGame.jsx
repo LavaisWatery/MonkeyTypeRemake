@@ -11,7 +11,7 @@ const TypeGame = ({stateObject}) => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            if(stateObject.gameObject.startTime == null) return;
+            if(stateObject.gameObject.endTime == null) return;
             setCurrentTime(new Date());
         }, 10);
 
@@ -22,7 +22,7 @@ const TypeGame = ({stateObject}) => {
         <div className={styles.type}>
             <div className={styles.combo}>
                 <div>Combo: {stateObject.gameObject.combo}</div>
-                <div>{currentTime != null && Math.floor((currentTime.getTime() - stateObject.gameObject.startTime.getTime()) / 1000)}</div>
+                <div>{currentTime != null && Math.floor((stateObject.gameObject.endTime.getTime() - currentTime.getTime()) / 1000)}</div>
             </div>
             {layitout(stateObject)}
         </div>
