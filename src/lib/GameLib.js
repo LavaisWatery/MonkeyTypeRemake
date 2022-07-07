@@ -1,4 +1,4 @@
-export const GAME_TIMER = 5;
+export const GAME_TIMER = 30;
 // Creates fresh game object from typeString (what we want to type, this will eventually be auto generated)
 export function createGameObject(typeString) {
     return { type: typeString, currentTyped: "", combo: 0 }
