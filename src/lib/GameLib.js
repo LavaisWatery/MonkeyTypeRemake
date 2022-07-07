@@ -1,4 +1,4 @@
-export const GAME_TIMER = 30;
+export const GAME_TIMER = 20;
 // Creates fresh game object from typeString (what we want to type, this will eventually be auto generated)
 export function createGameObject(typeString) {
     return { type: typeString, currentTyped: "", combo: 0 }
@@ -13,8 +13,13 @@ export function gameKeyDown(e, stateObjects) {
     if ((e.keyCode >= 48 && e.keyCode <= 57 || 
         e.keyCode >= 65 && e.keyCode <= 90) || 
         (e.key==' ' || e.key=="'" || e.key=="," || e.key=="." || e.key=="-" || e.key==":" || e.key==";" || e.key=="?")) { // They typed a key, number, space
+        document.getElementById("endSlate").style.display = "none"; // update endslate if it's not already updated
         var gameObject = { ...stateObjects.gameObject };
-        if(gameObject.endTime == null) gameObject.endTime = new Date(new Date().getTime() + (1000 * GAME_TIMER)); // start timer
+        
+        if(gameObject.endTime == null) {
+            gameObject.endTime = new Date(new Date().getTime() + (1000 * GAME_TIMER)); // start timer
+            gameObject.currentTyped = "";
+        }
         
         e.preventDefault();
         var nextChar = gameObject.type[gameObject.currentTyped.length];
@@ -24,7 +29,7 @@ export function gameKeyDown(e, stateObjects) {
         else wombo = 0;
 
         gameObject.combo = wombo;
-        gameObject.currentTyped = stateObjects.gameObject.currentTyped += e.key;
+        gameObject.currentTyped = gameObject.currentTyped += e.key;
 
         stateObjects.setGameObject(gameObject);
     }
@@ -36,6 +41,7 @@ export function gameKeyDown(e, stateObjects) {
     }
 }
 
+// Returns array of our characters
 export function layitout(stateObjects) {
     var elements = [];
     var gameObject = stateObjects.gameObject;

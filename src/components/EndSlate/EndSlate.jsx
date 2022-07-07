@@ -1,15 +1,24 @@
+import { GAME_TIMER } from "../../lib/GameLib";
 import styles from "./EndSlate.module.scss"
 
 const EndSlate = ({stateObject}) => {
     function getWordsTyped() {
-        var typedSplit = stateObject.oj.currentTyped.split(" ");
+        if(stateObject.endState == null) return null;
+        console.log(stateObject.endState.oj);
+        var typedSplit = stateObject.endState.oj.currentTyped.split(" ");
 
         return typedSplit.length;
     }
 
+    function getWPM() {
+        if(stateObject.endState == null) return null;
+        return getWordsTyped() / (GAME_TIMER / 60);
+    }
+
     return (
         <div className={styles.root}>
-            Words Typed: {getWordsTyped()}
+            <div>Words Typed: {getWordsTyped()}</div>
+            <div>WPM: {getWPM()}</div>
         </div>
     );
 }
